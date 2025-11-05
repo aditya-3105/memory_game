@@ -266,19 +266,22 @@ export default function SimonSaysGame({
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <Link to="/">
+          <Link to={multiplayerMode ? "/pvp" : "/"}>
             <Button variant="outline" size="sm" className="gap-2">
               <ArrowLeft className="h-4 w-4" />
-              Back to Dashboard
+              Back {multiplayerMode ? "to PVP" : "to Dashboard"}
             </Button>
           </Link>
-          <h1 className="text-2xl font-bold text-foreground">Simon Says</h1>
+          <h1 className="text-2xl font-bold text-foreground">
+            Simon Says {multiplayerMode && <span className="text-sm text-primary">(PVP)</span>}
+          </h1>
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
               size="sm"
               onClick={() => setSoundEnabled(!soundEnabled)}
               className="gap-2"
+              disabled={multiplayerMode}
             >
               {soundEnabled ? (
                 <Volume2 className="h-4 w-4" />
@@ -291,6 +294,7 @@ export default function SimonSaysGame({
               size="sm"
               onClick={resetGame}
               className="gap-2"
+              disabled={multiplayerMode}
             >
               <RotateCcw className="h-4 w-4" />
               New Game
