@@ -36,7 +36,15 @@ interface ColorButton {
   sound: number; // Frequency for beep
 }
 
-export default function SimonSaysGame() {
+interface SimonSaysGameProps {
+  multiplayerMode?: boolean;
+  onGameComplete?: (score: number) => void;
+}
+
+export default function SimonSaysGame({
+  multiplayerMode = false,
+  onGameComplete,
+}: SimonSaysGameProps = {}) {
   const { settings } = useSettings();
   const { authState } = useAuth();
   const [sequence, setSequence] = useState<ColorType[]>([]);
