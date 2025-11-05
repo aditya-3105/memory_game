@@ -178,7 +178,10 @@ export default function PicturePuzzleGame({
             </Button>
           </Link>
           <h1 className="text-2xl font-bold text-foreground">
-            Picture Puzzle {multiplayerMode && <span className="text-sm text-primary">(PVP)</span>}
+            Picture Puzzle{" "}
+            {multiplayerMode && (
+              <span className="text-sm text-primary">(PVP)</span>
+            )}
           </h1>
           <Button
             variant="outline"

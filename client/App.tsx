@@ -45,7 +45,10 @@ const App = () => (
                 element={<PicturePuzzleGame />}
               />
               <Route path="/pvp" element={<PVP />} />
-              <Route path="/pvp/game/:gameId/:matchId" element={<PVPGameContainer />} />
+              <Route
+                path="/pvp/game/:gameId/:matchId"
+                element={<PVPGameContainer />}
+              />
               <Route path="/pvp/results/:matchId" element={<PVPResults />} />
               <Route path="/profile" element={<Profile />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

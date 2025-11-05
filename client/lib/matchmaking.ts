@@ -14,7 +14,12 @@ import {
   Unsubscribe,
 } from "firebase/firestore";
 
-export type GameId = "card-flip" | "guess-cup" | "simon-says" | "word-builder" | "picture-puzzle";
+export type GameId =
+  | "card-flip"
+  | "guess-cup"
+  | "simon-says"
+  | "word-builder"
+  | "picture-puzzle";
 
 export interface Match {
   id: string;
@@ -147,12 +152,12 @@ export async function updatePlayerScore(
 ): Promise<void> {
   const field = playerNum === 1 ? "player1" : "player2";
   const match = await getDoc(doc(db, "matches", matchId));
-  
+
   if (!match.exists()) return;
 
   const data = match.data() as Match;
   const player = data[field as keyof Match];
-  
+
   if (player) {
     await updateDoc(doc(db, "matches", matchId), {
       [field]: {
@@ -170,7 +175,7 @@ export async function updatePlayerScore(
  */
 export async function completeMatch(matchId: string): Promise<void> {
   const match = await getDoc(doc(db, "matches", matchId));
-  
+
   if (!match.exists()) return;
 
   const data = match.data() as Match;
@@ -200,9 +205,7 @@ export async function cancelMatch(matchId: string): Promise<void> {
 /**
  * Get current match for a player
  */
-export async function getCurrentMatch(
-  uid: string,
-): Promise<Match | null> {
+export async function getCurrentMatch(uid: string): Promise<Match | null> {
   const q = query(
     collection(db, "matches"),
     where("status", "!=", "completed"),

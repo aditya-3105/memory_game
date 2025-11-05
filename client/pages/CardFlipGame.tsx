@@ -311,7 +311,10 @@ export default function CardFlipGame({
             </Button>
           </Link>
           <h1 className="text-2xl font-bold text-foreground">
-            Card Flip Memory {multiplayerMode && <span className="text-sm text-primary">(PVP)</span>}
+            Card Flip Memory{" "}
+            {multiplayerMode && (
+              <span className="text-sm text-primary">(PVP)</span>
+            )}
           </h1>
           <Button
             variant="outline"

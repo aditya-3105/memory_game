@@ -1,11 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Crown, Medal, Heart } from "lucide-react";
@@ -20,7 +15,9 @@ export default function PVPResults() {
 
   const [match, setMatch] = useState<Match | null>(null);
   const [loading, setLoading] = useState(true);
-  const [playerPosition, setPlayerPosition] = useState<"winner" | "loser" | "tie" | null>(null);
+  const [playerPosition, setPlayerPosition] = useState<
+    "winner" | "loser" | "tie" | null
+  >(null);
 
   useEffect(() => {
     if (!matchId) return;
@@ -155,7 +152,8 @@ export default function PVPResults() {
             <div className="text-center space-y-2">
               <p className="text-sm text-muted-foreground">Score Difference</p>
               <p className="text-3xl font-bold text-primary">
-                {Math.abs(match.player1.score - (match.player2?.score || 0))} points
+                {Math.abs(match.player1.score - (match.player2?.score || 0))}{" "}
+                points
               </p>
             </div>
           </CardContent>

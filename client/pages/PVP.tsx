@@ -9,7 +9,14 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Layers, Trophy, Brain, Palette, Type, Image as ImageIcon } from "lucide-react";
+import {
+  Layers,
+  Trophy,
+  Brain,
+  Palette,
+  Type,
+  Image as ImageIcon,
+} from "lucide-react";
 import Layout from "@/components/Layout";
 import MatchmakingModal from "@/components/MatchmakingModal";
 import { useAuth } from "@/contexts/AuthContext";
@@ -122,8 +129,8 @@ export default function PVP() {
             PVP Games
           </h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Challenge other players and compete for the top spot. Find an opponent and test
-            your skills in real-time battles.
+            Challenge other players and compete for the top spot. Find an
+            opponent and test your skills in real-time battles.
           </p>
         </div>
 

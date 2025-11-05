@@ -231,7 +231,10 @@ export default function WordBuilderGame({
             </Button>
           </Link>
           <h1 className="text-2xl font-bold text-foreground">
-            Word Builder {multiplayerMode && <span className="text-sm text-primary">(PVP)</span>}
+            Word Builder{" "}
+            {multiplayerMode && (
+              <span className="text-sm text-primary">(PVP)</span>
+            )}
           </h1>
           <Button
             variant="outline"

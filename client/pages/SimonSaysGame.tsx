@@ -273,7 +273,10 @@ export default function SimonSaysGame({
             </Button>
           </Link>
           <h1 className="text-2xl font-bold text-foreground">
-            Simon Says {multiplayerMode && <span className="text-sm text-primary">(PVP)</span>}
+            Simon Says{" "}
+            {multiplayerMode && (
+              <span className="text-sm text-primary">(PVP)</span>
+            )}
           </h1>
           <div className="flex items-center gap-2">
             <Button

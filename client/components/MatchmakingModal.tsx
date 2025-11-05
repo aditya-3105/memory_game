@@ -104,7 +104,8 @@ export default function MatchmakingModal({
           {opponent ? (
             <>
               <p className="text-lg font-semibold text-foreground">
-                Playing against: <span className="text-primary">{opponent}</span>
+                Playing against:{" "}
+                <span className="text-primary">{opponent}</span>
               </p>
               <p className="text-sm text-muted-foreground">
                 Get ready to compete!

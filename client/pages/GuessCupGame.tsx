@@ -245,7 +245,10 @@ export default function GuessCupGame({
             </Button>
           </Link>
           <h1 className="text-2xl font-bold text-foreground">
-            Guess the Cup {multiplayerMode && <span className="text-sm text-primary">(PVP)</span>}
+            Guess the Cup{" "}
+            {multiplayerMode && (
+              <span className="text-sm text-primary">(PVP)</span>
+            )}
           </h1>
           <Button
             variant="outline"

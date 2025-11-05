@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Loader, Trophy, ArrowLeft } from "lucide-react";
 import Layout from "@/components/Layout";
-import { subscribeToMatch, updatePlayerScore, completeMatch, type Match } from "@/lib/matchmaking";
+import {
+  subscribeToMatch,
+  updatePlayerScore,
+  completeMatch,
+  type Match,
+} from "@/lib/matchmaking";
 import { useAuth } from "@/contexts/AuthContext";
 import CardFlipGame from "@/pages/CardFlipGame";
 import GuessCupGame from "@/pages/GuessCupGame";
@@ -171,10 +171,16 @@ export default function PVPGameContainer({ onGameComplete }: PVPGameProps) {
             <ArrowLeft className="h-4 w-4" />
             Back to PVP
           </Button>
-          
+
           <div className="flex items-center gap-4">
             {/* Player 1 Score */}
-            <Card className={currentPlayer === match.player1 ? "border-primary/50 bg-primary/10" : ""}>
+            <Card
+              className={
+                currentPlayer === match.player1
+                  ? "border-primary/50 bg-primary/10"
+                  : ""
+              }
+            >
               <CardContent className="p-3">
                 <div className="text-xs text-muted-foreground">
                   {match.player1.username}
@@ -193,7 +199,13 @@ export default function PVPGameContainer({ onGameComplete }: PVPGameProps) {
             <div className="text-2xl font-bold text-muted-foreground">VS</div>
 
             {/* Player 2 Score */}
-            <Card className={currentPlayer === match.player2 ? "border-primary/50 bg-primary/10" : ""}>
+            <Card
+              className={
+                currentPlayer === match.player2
+                  ? "border-primary/50 bg-primary/10"
+                  : ""
+              }
+            >
               <CardContent className="p-3">
                 <div className="text-xs text-muted-foreground">
                   {match.player2?.username || "Waiting..."}
@@ -221,18 +233,23 @@ export default function PVPGameContainer({ onGameComplete }: PVPGameProps) {
               </div>
             </div>
           )}
-          
+
           {gameCompleted && (
             <div className="absolute inset-0 bg-background/50 backdrop-blur-sm z-40 flex items-center justify-center rounded-lg">
               <div className="text-center space-y-3">
                 <Trophy className="h-12 w-12 text-primary mx-auto" />
                 <p className="font-semibold">Game Complete!</p>
-                <p className="text-sm text-muted-foreground">Showing results...</p>
+                <p className="text-sm text-muted-foreground">
+                  Showing results...
+                </p>
               </div>
             </div>
           )}
 
-          <GameComponent multiplayerMode={true} onGameComplete={handleGameComplete} />
+          <GameComponent
+            multiplayerMode={true}
+            onGameComplete={handleGameComplete}
+          />
         </div>
       </div>
     </Layout>
