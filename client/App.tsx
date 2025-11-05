@@ -18,7 +18,9 @@ import Leaderboard from "./pages/Leaderboard";
 import WordBuilderGame from "./pages/WordBuilderGame";
 import PicturePuzzleGame from "./pages/PicturePuzzleGame";
 import PVP from "./pages/PVP";
+import PVPResults from "./pages/PVPResults";
 import Profile from "./pages/Profile";
+import PVPGameContainer from "./components/PVPGameContainer";
 
 const queryClient = new QueryClient();
 
