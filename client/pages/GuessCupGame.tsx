@@ -22,7 +22,15 @@ interface Cup {
 
 type GamePhase = "setup" | "showing" | "shuffling" | "guessing" | "result";
 
-export default function GuessCupGame() {
+interface GuessCupGameProps {
+  multiplayerMode?: boolean;
+  onGameComplete?: (score: number) => void;
+}
+
+export default function GuessCupGame({
+  multiplayerMode = false,
+  onGameComplete,
+}: GuessCupGameProps = {}) {
   const { settings } = useSettings();
   const { authState } = useAuth();
   const [cups, setCups] = useState<Cup[]>([]);
