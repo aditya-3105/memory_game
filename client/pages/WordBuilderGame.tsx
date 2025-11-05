@@ -201,6 +201,13 @@ export default function WordBuilderGame({
 
   const nextRound = () => {
     const nr = round + 1;
+
+    // In multiplayer mode, end game after 10 rounds
+    if (multiplayerMode && nr > 10) {
+      onGameComplete?.(score);
+      return;
+    }
+
     setRound(nr);
     buildRound(nr);
   };
