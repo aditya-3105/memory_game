@@ -94,11 +94,15 @@ export default function PicturePuzzleGame({
 
   useEffect(() => {
     if (isSolved) {
+      const roundScore = Math.max(10, 200 - moves * 2);
+      const newTotal = totalScore + roundScore;
+      setTotalScore(newTotal);
+
       // update stats and advance round
-      if (authState.isAuthenticated && authState.user) {
+      if (!multiplayerMode && authState.isAuthenticated && authState.user) {
         updateGameStats(authState.user.id, "picture-puzzle" as any, {
           played: true,
-          addScore: Math.max(10, 200 - moves * 2),
+          addScore: roundScore,
           streakCandidate: round,
         }).catch(() => {});
         logGamePlay(authState.user.id, "picture-puzzle" as any, {
@@ -108,8 +112,18 @@ export default function PicturePuzzleGame({
           imageUrl,
         }).catch(() => {});
       }
+
       if (settings.soundEnabled)
         playSound("success", settings.soundVolume / 100);
+
+      // In multiplayer mode, end after 5 rounds
+      if (multiplayerMode && round >= 5) {
+        setTimeout(() => {
+          onGameComplete?.(newTotal);
+        }, 600);
+        return;
+      }
+
       const nextGrid = grid < 5 ? grid + 1 : grid; // grow to 5x5 max
       const nextRound = round + 1;
       setTimeout(() => {
