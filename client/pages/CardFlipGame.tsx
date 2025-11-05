@@ -140,19 +140,26 @@ export default function CardFlipGame({
   }, [matches, difficulty]);
 
   useEffect(() => {
-    if (gameCompleted && authState.isAuthenticated && authState.user) {
+    if (gameCompleted) {
       const finalScore = getScore();
-      const streakCandidate = difficultySettings[difficulty].pairs;
-      updateGameStats(authState.user.id, "card-flip", {
-        addScore: finalScore,
-        streakCandidate,
-      }).catch(() => {});
-      logGamePlay(authState.user.id, "card-flip", {
-        score: finalScore,
-        moves,
-        timeElapsed,
-        difficulty,
-      }).catch(() => {});
+
+      if (multiplayerMode) {
+        // In multiplayer mode, just report the score
+        onGameComplete?.(finalScore);
+      } else if (authState.isAuthenticated && authState.user) {
+        // In single-player mode, update stats and log gameplay
+        const streakCandidate = difficultySettings[difficulty].pairs;
+        updateGameStats(authState.user.id, "card-flip", {
+          addScore: finalScore,
+          streakCandidate,
+        }).catch(() => {});
+        logGamePlay(authState.user.id, "card-flip", {
+          score: finalScore,
+          moves,
+          timeElapsed,
+          difficulty,
+        }).catch(() => {});
+      }
     }
     // Only run when game becomes completed
     // eslint-disable-next-line react-hooks/exhaustive-deps
