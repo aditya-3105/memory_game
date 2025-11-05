@@ -304,20 +304,21 @@ export default function CardFlipGame({
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <Link to="/">
+          <Link to={multiplayerMode ? "/pvp" : "/"}>
             <Button variant="outline" size="sm" className="gap-2">
               <ArrowLeft className="h-4 w-4" />
-              Back to Dashboard
+              Back {multiplayerMode ? "to PVP" : "to Dashboard"}
             </Button>
           </Link>
           <h1 className="text-2xl font-bold text-foreground">
-            Card Flip Memory
+            Card Flip Memory {multiplayerMode && <span className="text-sm text-primary">(PVP)</span>}
           </h1>
           <Button
             variant="outline"
             size="sm"
             onClick={initializeGame}
             className="gap-2"
+            disabled={multiplayerMode && gameStarted}
           >
             <RotateCcw className="h-4 w-4" />
             New Game
