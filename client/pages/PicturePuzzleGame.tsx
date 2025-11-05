@@ -66,11 +66,20 @@ function makeSolvableShuffle(size: number): number[] {
   return tiles;
 }
 
-export default function PicturePuzzleGame() {
+interface PicturePuzzleGameProps {
+  multiplayerMode?: boolean;
+  onGameComplete?: (score: number) => void;
+}
+
+export default function PicturePuzzleGame({
+  multiplayerMode = false,
+  onGameComplete,
+}: PicturePuzzleGameProps = {}) {
   const [grid, setGrid] = useState(3);
   const [tiles, setTiles] = useState<number[]>(() => makeSolvableShuffle(3));
   const [round, setRound] = useState(1);
   const [moves, setMoves] = useState(0);
+  const [totalScore, setTotalScore] = useState(0);
   const [imageUrl, setImageUrl] = useState<string>(
     () => IMAGES[Math.floor(Math.random() * IMAGES.length)],
   );
