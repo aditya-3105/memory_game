@@ -98,31 +98,32 @@ export default function MatchmakingModal({
           <AlertDialogTitle className="text-center">
             {opponent ? "Opponent Found!" : "Finding Match..."}
           </AlertDialogTitle>
-          <AlertDialogDescription className="text-center space-y-4 py-4">
-            {opponent ? (
-              <>
-                <div className="text-lg font-semibold text-foreground">
-                  Playing against: <span className="text-primary">{opponent}</span>
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  Get ready to compete!
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="flex justify-center py-4">
-                  <Loader className="h-8 w-8 text-primary animate-spin" />
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  Searching for an opponent...
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  Waiting: {formatTime(elapsedTime)}
-                </div>
-              </>
-            )}
-          </AlertDialogDescription>
         </AlertDialogHeader>
+
+        <div className="text-center space-y-4 py-4">
+          {opponent ? (
+            <>
+              <p className="text-lg font-semibold text-foreground">
+                Playing against: <span className="text-primary">{opponent}</span>
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Get ready to compete!
+              </p>
+            </>
+          ) : (
+            <>
+              <div className="flex justify-center py-4">
+                <Loader className="h-8 w-8 text-primary animate-spin" />
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Searching for an opponent...
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Waiting: {formatTime(elapsedTime)}
+              </p>
+            </>
+          )}
+        </div>
 
         <div className="flex gap-2 justify-center">
           {!opponent && (
