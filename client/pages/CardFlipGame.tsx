@@ -34,7 +34,15 @@ const cardSymbols = [
   "🎼",
 ];
 
-export default function CardFlipGame() {
+interface CardFlipGameProps {
+  multiplayerMode?: boolean;
+  onGameComplete?: (score: number) => void;
+}
+
+export default function CardFlipGame({
+  multiplayerMode = false,
+  onGameComplete,
+}: CardFlipGameProps = {}) {
   const { settings } = useSettings();
   const { authState } = useAuth();
   const [cards, setCards] = useState<GameCard[]>([]);
@@ -45,7 +53,7 @@ export default function CardFlipGame() {
   const [gameCompleted, setGameCompleted] = useState(false);
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">(
-    "easy",
+    multiplayerMode ? "easy" : "easy",
   );
 
   const gameGridRef = useRef<HTMLDivElement>(null);
