@@ -368,7 +368,7 @@ export default function CardFlipGame({
         </div>
 
         {/* Difficulty Selection */}
-        {!gameStarted && (
+        {!gameStarted && !multiplayerMode && (
           <Card className="bg-card/50">
             <CardHeader>
               <CardTitle className="text-center">Choose Difficulty</CardTitle>
