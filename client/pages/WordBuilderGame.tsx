@@ -46,7 +46,15 @@ function randomLetters(count: number) {
   );
 }
 
-export default function WordBuilderGame() {
+interface WordBuilderGameProps {
+  multiplayerMode?: boolean;
+  onGameComplete?: (score: number) => void;
+}
+
+export default function WordBuilderGame({
+  multiplayerMode = false,
+  onGameComplete,
+}: WordBuilderGameProps = {}) {
   const { settings } = useSettings();
   const base = useMemo(
     () => mapSettingsToWordConfig(settings.difficulty),
@@ -193,6 +201,13 @@ export default function WordBuilderGame() {
 
   const nextRound = () => {
     const nr = round + 1;
+
+    // In multiplayer mode, end game after 10 rounds
+    if (multiplayerMode && nr > 10) {
+      onGameComplete?.(score);
+      return;
+    }
+
     setRound(nr);
     buildRound(nr);
   };
@@ -209,18 +224,24 @@ export default function WordBuilderGame() {
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <Link to="/">
+          <Link to={multiplayerMode ? "/pvp" : "/"}>
             <Button variant="outline" size="sm" className="gap-2">
               <ArrowLeft className="h-4 w-4" />
-              Back to Dashboard
+              Back {multiplayerMode ? "to PVP" : "to Dashboard"}
             </Button>
           </Link>
-          <h1 className="text-2xl font-bold text-foreground">Word Builder</h1>
+          <h1 className="text-2xl font-bold text-foreground">
+            Word Builder{" "}
+            {multiplayerMode && (
+              <span className="text-sm text-primary">(PVP)</span>
+            )}
+          </h1>
           <Button
             variant="outline"
             size="sm"
             onClick={resetGame}
             className="gap-2"
+            disabled={multiplayerMode}
           >
             <RotateCcw className="h-4 w-4" />
             New Game

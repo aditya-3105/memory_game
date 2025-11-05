@@ -1,0 +1,53 @@
+FIRESTORE SECURITY RULES - COPY & PASTE THIS
+
+Go to: Firebase Console → Firestore Database → Rules tab
+Delete all existing content and paste this:
+
+---START---
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // User documents - only user can read/write their own
+    match /users/{uid} {
+      allow read: if true; // Anyone can view user profiles
+      allow write: if request.auth.uid == uid;
+      
+      // Nested stats collection - only user can access
+      match /{document=**} {
+        allow read, write: if request.auth.uid == uid;
+      }
+    }
+
+    // Matches collection - PVP game rooms
+    match /matches/{matchId} {
+      // Anyone authenticated can create a new match
+      allow create: if request.auth != null && 
+        request.resource.data.player1.uid == request.auth.uid &&
+        request.resource.data.status == "waiting" &&
+        request.resource.data.player2 == null;
+
+      // Players in a match can read and update their match
+      allow read: if request.auth != null && (
+        resource.data.player1.uid == request.auth.uid ||
+        resource.data.player2.uid == request.auth.uid ||
+        resource.data.player2 == null // Allow reading waiting matches
+      );
+
+      // Allow updating match (joining, updating scores)
+      allow update: if request.auth != null && (
+        resource.data.player1.uid == request.auth.uid ||
+        resource.data.player2.uid == request.auth.uid ||
+        request.resource.data.player2.uid == request.auth.uid // Allow joining
+      );
+
+      // Only players in the match can delete
+      allow delete: if request.auth != null && (
+        resource.data.player1.uid == request.auth.uid ||
+        resource.data.player2.uid == request.auth.uid
+      );
+    }
+  }
+}
+---END---
+
+Then click "Publish"

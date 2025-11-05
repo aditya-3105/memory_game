@@ -22,7 +22,15 @@ interface Cup {
 
 type GamePhase = "setup" | "showing" | "shuffling" | "guessing" | "result";
 
-export default function GuessCupGame() {
+interface GuessCupGameProps {
+  multiplayerMode?: boolean;
+  onGameComplete?: (score: number) => void;
+}
+
+export default function GuessCupGame({
+  multiplayerMode = false,
+  onGameComplete,
+}: GuessCupGameProps = {}) {
   const { settings } = useSettings();
   const { authState } = useAuth();
   const [cups, setCups] = useState<Cup[]>([]);
@@ -200,9 +208,17 @@ export default function GuessCupGame() {
   };
 
   const nextRound = () => {
-    setRound((prev) => prev + 1);
+    const nextRoundNum = round + 1;
+
+    // In multiplayer mode, end game after 5 rounds
+    if (multiplayerMode && nextRoundNum > 5) {
+      onGameComplete?.(score);
+      return;
+    }
+
+    setRound(nextRoundNum);
     setShuffleSpeed((prev) => Math.max(300, prev - 50)); // Increase speed each round
-    if (round % 3 === 0 && cupCount < 5) {
+    if (nextRoundNum % 3 === 0 && cupCount < 5) {
       setCupCount((prev) => prev + 1); // Add a cup every 3 rounds
     }
     initializeGame();
@@ -222,18 +238,24 @@ export default function GuessCupGame() {
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <Link to="/">
+          <Link to={multiplayerMode ? "/pvp" : "/"}>
             <Button variant="outline" size="sm" className="gap-2">
               <ArrowLeft className="h-4 w-4" />
-              Back to Dashboard
+              Back {multiplayerMode ? "to PVP" : "to Dashboard"}
             </Button>
           </Link>
-          <h1 className="text-2xl font-bold text-foreground">Guess the Cup</h1>
+          <h1 className="text-2xl font-bold text-foreground">
+            Guess the Cup{" "}
+            {multiplayerMode && (
+              <span className="text-sm text-primary">(PVP)</span>
+            )}
+          </h1>
           <Button
             variant="outline"
             size="sm"
             onClick={resetGame}
             className="gap-2"
+            disabled={multiplayerMode}
           >
             <RotateCcw className="h-4 w-4" />
             New Game

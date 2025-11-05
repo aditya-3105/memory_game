@@ -1,0 +1,45 @@
+FIRESTORE SECURITY RULES - COPY EXACTLY & PUBLISH
+
+Go to: Firebase Console → Firestore Database → Rules tab
+IMPORTANT: Clear all existing content first
+Then paste this entire content:
+
+---START COPYING HERE---
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow authenticated users to read/write user profiles
+    match /users/{uid} {
+      allow read: if true;
+      allow write: if request.auth.uid == uid;
+      
+      match /{document=**} {
+        allow read, write: if request.auth.uid == uid;
+      }
+    }
+
+    // Matches collection - allow authenticated users to access
+    match /matches/{matchId} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
+---END COPYING HERE---
+
+CRITICAL STEPS:
+1. Go to https://console.firebase.google.com
+2. Select project: memory-master-41cca
+3. Click "Firestore Database" on left sidebar
+4. Click the "Rules" tab
+5. DELETE everything in the editor
+6. PASTE the above code (from START to END)
+7. Click the BLUE "Publish" button at bottom right
+8. Wait for "Rules update finished" message
+9. Hard refresh your app (Ctrl+Shift+R or Cmd+Shift+R)
+10. Try PVP again
+
+If still getting permission error after publishing:
+- Confirm you're signed in to the app
+- Open browser DevTools → Application → Local Storage
+- Check if 'memorymaster-settings' exists (means you're logged in)
+- Try signing in with email/password or check if auth is working

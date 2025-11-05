@@ -34,7 +34,15 @@ const cardSymbols = [
   "🎼",
 ];
 
-export default function CardFlipGame() {
+interface CardFlipGameProps {
+  multiplayerMode?: boolean;
+  onGameComplete?: (score: number) => void;
+}
+
+export default function CardFlipGame({
+  multiplayerMode = false,
+  onGameComplete,
+}: CardFlipGameProps = {}) {
   const { settings } = useSettings();
   const { authState } = useAuth();
   const [cards, setCards] = useState<GameCard[]>([]);
@@ -45,7 +53,7 @@ export default function CardFlipGame() {
   const [gameCompleted, setGameCompleted] = useState(false);
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">(
-    "easy",
+    multiplayerMode ? "easy" : "easy",
   );
 
   const gameGridRef = useRef<HTMLDivElement>(null);
@@ -132,19 +140,26 @@ export default function CardFlipGame() {
   }, [matches, difficulty]);
 
   useEffect(() => {
-    if (gameCompleted && authState.isAuthenticated && authState.user) {
+    if (gameCompleted) {
       const finalScore = getScore();
-      const streakCandidate = difficultySettings[difficulty].pairs;
-      updateGameStats(authState.user.id, "card-flip", {
-        addScore: finalScore,
-        streakCandidate,
-      }).catch(() => {});
-      logGamePlay(authState.user.id, "card-flip", {
-        score: finalScore,
-        moves,
-        timeElapsed,
-        difficulty,
-      }).catch(() => {});
+
+      if (multiplayerMode) {
+        // In multiplayer mode, just report the score
+        onGameComplete?.(finalScore);
+      } else if (authState.isAuthenticated && authState.user) {
+        // In single-player mode, update stats and log gameplay
+        const streakCandidate = difficultySettings[difficulty].pairs;
+        updateGameStats(authState.user.id, "card-flip", {
+          addScore: finalScore,
+          streakCandidate,
+        }).catch(() => {});
+        logGamePlay(authState.user.id, "card-flip", {
+          score: finalScore,
+          moves,
+          timeElapsed,
+          difficulty,
+        }).catch(() => {});
+      }
     }
     // Only run when game becomes completed
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -289,20 +304,24 @@ export default function CardFlipGame() {
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <Link to="/">
+          <Link to={multiplayerMode ? "/pvp" : "/"}>
             <Button variant="outline" size="sm" className="gap-2">
               <ArrowLeft className="h-4 w-4" />
-              Back to Dashboard
+              Back {multiplayerMode ? "to PVP" : "to Dashboard"}
             </Button>
           </Link>
           <h1 className="text-2xl font-bold text-foreground">
-            Card Flip Memory
+            Card Flip Memory{" "}
+            {multiplayerMode && (
+              <span className="text-sm text-primary">(PVP)</span>
+            )}
           </h1>
           <Button
             variant="outline"
             size="sm"
             onClick={initializeGame}
             className="gap-2"
+            disabled={multiplayerMode && gameStarted}
           >
             <RotateCcw className="h-4 w-4" />
             New Game
@@ -352,7 +371,7 @@ export default function CardFlipGame() {
         </div>
 
         {/* Difficulty Selection */}
-        {!gameStarted && (
+        {!gameStarted && !multiplayerMode && (
           <Card className="bg-card/50">
             <CardHeader>
               <CardTitle className="text-center">Choose Difficulty</CardTitle>

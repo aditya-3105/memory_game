@@ -18,7 +18,9 @@ import Leaderboard from "./pages/Leaderboard";
 import WordBuilderGame from "./pages/WordBuilderGame";
 import PicturePuzzleGame from "./pages/PicturePuzzleGame";
 import PVP from "./pages/PVP";
+import PVPResults from "./pages/PVPResults";
 import Profile from "./pages/Profile";
+import PVPGameContainer from "./components/PVPGameContainer";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +45,11 @@ const App = () => (
                 element={<PicturePuzzleGame />}
               />
               <Route path="/pvp" element={<PVP />} />
+              <Route
+                path="/pvp/game/:gameId/:matchId"
+                element={<PVPGameContainer />}
+              />
+              <Route path="/pvp/results/:matchId" element={<PVPResults />} />
               <Route path="/profile" element={<Profile />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />

@@ -66,11 +66,20 @@ function makeSolvableShuffle(size: number): number[] {
   return tiles;
 }
 
-export default function PicturePuzzleGame() {
+interface PicturePuzzleGameProps {
+  multiplayerMode?: boolean;
+  onGameComplete?: (score: number) => void;
+}
+
+export default function PicturePuzzleGame({
+  multiplayerMode = false,
+  onGameComplete,
+}: PicturePuzzleGameProps = {}) {
   const [grid, setGrid] = useState(3);
   const [tiles, setTiles] = useState<number[]>(() => makeSolvableShuffle(3));
   const [round, setRound] = useState(1);
   const [moves, setMoves] = useState(0);
+  const [totalScore, setTotalScore] = useState(0);
   const [imageUrl, setImageUrl] = useState<string>(
     () => IMAGES[Math.floor(Math.random() * IMAGES.length)],
   );
@@ -85,11 +94,15 @@ export default function PicturePuzzleGame() {
 
   useEffect(() => {
     if (isSolved) {
+      const roundScore = Math.max(10, 200 - moves * 2);
+      const newTotal = totalScore + roundScore;
+      setTotalScore(newTotal);
+
       // update stats and advance round
-      if (authState.isAuthenticated && authState.user) {
+      if (!multiplayerMode && authState.isAuthenticated && authState.user) {
         updateGameStats(authState.user.id, "picture-puzzle" as any, {
           played: true,
-          addScore: Math.max(10, 200 - moves * 2),
+          addScore: roundScore,
           streakCandidate: round,
         }).catch(() => {});
         logGamePlay(authState.user.id, "picture-puzzle" as any, {
@@ -99,8 +112,18 @@ export default function PicturePuzzleGame() {
           imageUrl,
         }).catch(() => {});
       }
+
       if (settings.soundEnabled)
         playSound("success", settings.soundVolume / 100);
+
+      // In multiplayer mode, end after 5 rounds
+      if (multiplayerMode && round >= 5) {
+        setTimeout(() => {
+          onGameComplete?.(newTotal);
+        }, 600);
+        return;
+      }
+
       const nextGrid = grid < 5 ? grid + 1 : grid; // grow to 5x5 max
       const nextRound = round + 1;
       setTimeout(() => {
@@ -148,18 +171,24 @@ export default function PicturePuzzleGame() {
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <Link to="/">
+          <Link to={multiplayerMode ? "/pvp" : "/"}>
             <Button variant="outline" size="sm" className="gap-2">
               <ArrowLeft className="h-4 w-4" />
-              Back to Dashboard
+              Back {multiplayerMode ? "to PVP" : "to Dashboard"}
             </Button>
           </Link>
-          <h1 className="text-2xl font-bold text-foreground">Picture Puzzle</h1>
+          <h1 className="text-2xl font-bold text-foreground">
+            Picture Puzzle{" "}
+            {multiplayerMode && (
+              <span className="text-sm text-primary">(PVP)</span>
+            )}
+          </h1>
           <Button
             variant="outline"
             size="sm"
             onClick={resetGame}
             className="gap-2"
+            disabled={multiplayerMode}
           >
             <RotateCcw className="h-4 w-4" />
             New Game
