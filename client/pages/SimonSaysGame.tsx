@@ -195,7 +195,11 @@ export default function SimonSaysGame({
         if (score > bestScore) {
           setBestScore(score);
         }
-        if (authState.isAuthenticated && authState.user) {
+
+        if (multiplayerMode) {
+          // In multiplayer mode, report the score and end the game
+          onGameComplete?.(score);
+        } else if (authState.isAuthenticated && authState.user) {
           const streakCandidate = Math.max(sequence.length - 1, 0);
           updateGameStats(authState.user.id, "simon-says", {
             played: true,
