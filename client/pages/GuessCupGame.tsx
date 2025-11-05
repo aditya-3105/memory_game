@@ -208,9 +208,17 @@ export default function GuessCupGame({
   };
 
   const nextRound = () => {
-    setRound((prev) => prev + 1);
+    const nextRoundNum = round + 1;
+
+    // In multiplayer mode, end game after 5 rounds
+    if (multiplayerMode && nextRoundNum > 5) {
+      onGameComplete?.(score);
+      return;
+    }
+
+    setRound(nextRoundNum);
     setShuffleSpeed((prev) => Math.max(300, prev - 50)); // Increase speed each round
-    if (round % 3 === 0 && cupCount < 5) {
+    if (nextRoundNum % 3 === 0 && cupCount < 5) {
       setCupCount((prev) => prev + 1); // Add a cup every 3 rounds
     }
     initializeGame();
