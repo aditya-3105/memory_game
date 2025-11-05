@@ -46,7 +46,15 @@ function randomLetters(count: number) {
   );
 }
 
-export default function WordBuilderGame() {
+interface WordBuilderGameProps {
+  multiplayerMode?: boolean;
+  onGameComplete?: (score: number) => void;
+}
+
+export default function WordBuilderGame({
+  multiplayerMode = false,
+  onGameComplete,
+}: WordBuilderGameProps = {}) {
   const { settings } = useSettings();
   const base = useMemo(
     () => mapSettingsToWordConfig(settings.difficulty),
